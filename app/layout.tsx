@@ -19,6 +19,23 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  keywords: "currency, exchange rates, finance, crypto, money",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://gjaldmidlar.is/",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: "https://gjaldmidlar.is/", //TODO: Add image
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
@@ -57,8 +74,8 @@ export default function RootLayout({
                 href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
                 title="nextui.org homepage"
               >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
+                <span className="text-default-600">Höfundur </span>
+                <p className="text-primary">Egill</p>
               </Link>
             </footer>
           </div>
