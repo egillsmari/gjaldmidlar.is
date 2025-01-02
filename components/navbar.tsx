@@ -44,7 +44,7 @@ export const Navbar = () => {
               className="flex justify-start items-center gap-1"
               href="/"
             >
-              <Logo />
+              <Logo style={{ margin: "10px" }} />
               <p className="font-bold text-inherit">Gjaldmiðlar</p>
             </NextLink>
           </NavbarBrand>
@@ -98,7 +98,7 @@ export const Navbar = () => {
               <GithubIcon className="text-default-500" />
             </Link>
           </NavbarItem>
-          <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+          {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
         </NavbarContent>
 
         <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
