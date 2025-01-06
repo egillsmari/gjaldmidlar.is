@@ -11,6 +11,14 @@ type CurrencyConverterProps = {
   data: DataType;
 };
 
+const formatNumber = (value: number) => {
+  return new Intl.NumberFormat("de-DE").format(value);
+};
+
+const parseNumber = (value: string) => {
+  return parseFloat(value.replace(/\./g, "").replace(/,/g, "."));
+};
+
 export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   const [topAmount, setTopAmount] = useState("1000");
   const [bottomAmount, setBottomAmount] = useState("");
@@ -24,49 +32,46 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
     if (selectedCurrencyType === "currency") {
       setBottomAmount(
         (
-          parseFloat(topAmount) *
+          parseNumber(topAmount) *
           data.currencyRates.conversion_rates[selectedCurrency]
         ).toFixed(2),
       );
     }
     if (selectedCurrencyType === "crypto") {
-      setBottomAmount(
-        (
-          parseFloat(topAmount) * data.cryptoRates[selectedCurrency].usd
-        ).toFixed(2),
-      );
+      const usdAmount =
+        parseNumber(topAmount) / data.cryptoRates[selectedCurrency].usd;
+
+      setBottomAmount(usdAmount.toFixed(2));
     }
     if (selectedCurrencyType === "metal") {
       setBottomAmount(
         (
-          parseFloat(topAmount) * data.metalRates.metals[selectedCurrency]
+          parseNumber(topAmount) / data.metalRates.metals[selectedCurrency]
         ).toFixed(2),
       );
     }
-  }, [topAmount, selectedCurrency]);
-  console.log("selectedCurrency: ", selectedCurrency);
-  console.log("selectedCurrencyType: ", selectedCurrencyType);
+  }, [topAmount, selectedCurrency, bottomAmount]);
+
   const handleTopAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.replace(/\./g, "");
 
     // Only allow positive numbers and empty string
     if (value === "" || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
       setTopAmount(value);
-      // You could add conversion logic here
-      setBottomAmount(value); // For demo purposes, 1:1 conversion
     }
   };
 
   const handleBottomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.replace(/\./g, "");
 
     // Only allow positive numbers and empty string
     if (value === "" || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
       setBottomAmount(value);
-      // You could add conversion logic here
-      setTopAmount(value); // For demo purposes, 1:1 conversion
     }
   };
+
+  console.log("selected currency", selectedCurrency);
+  console.log("selected currency type", selectedCurrencyType);
 
   return (
     <div className="max-w-md mx-auto space-y-4 p-4">
@@ -98,7 +103,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
               className="bg-transparent text-right text-xl text-black w-32 focus:outline-none"
               placeholder="0"
               type="text"
-              value={topAmount}
+              value={formatNumber(parseNumber(topAmount))}
               onChange={handleTopAmountChange}
             />
             <span className="text-black ml-2">ISK</span>
