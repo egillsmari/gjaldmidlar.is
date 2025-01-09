@@ -8,7 +8,7 @@ import {
   MetalType,
 } from "@/lib/types";
 
-const getCurrencyRates = async (): Promise<CurrencyType> => {
+const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
   if (process.env.NODE_ENV === "development") {
     return currency;
   } else {
@@ -16,11 +16,17 @@ const getCurrencyRates = async (): Promise<CurrencyType> => {
       `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_RATE_API}/latest/ISK`,
     );
 
+    if (!data.ok) {
+      console.warn("Failed to fetch currency rates");
+
+      return undefined;
+    }
+
     return await data.json();
   }
 };
 
-const getCryptoRates = async (): Promise<CryptoCurrencyType> => {
+const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
   if (process.env.NODE_ENV === "development") {
     return crypto;
   } else {
@@ -28,17 +34,29 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType> => {
       `https://api.coingecko.com/api/v3/simple/price?ids=0chain&vs_currencies=eur`,
     );
 
+    if (!data.ok) {
+      console.warn("Failed to fetch crypto rates");
+
+      return undefined;
+    }
+
     return await data.json();
   }
 };
 
-const getMetalRates = async (): Promise<MetalType> => {
+const getMetalRates = async (): Promise<MetalType | undefined> => {
   if (process.env.NODE_ENV === "development") {
     return metals;
   } else {
     const data = await fetch(
       `https://api.metals.dev/v1/latest?api_key=LO1JD56UJLIRMSVGTX9B868VGTX9B&currency=ISK&unit=g`,
     );
+
+    if (!data.ok) {
+      console.warn("Failed to fetch metal rates");
+
+      return undefined;
+    }
 
     return await data.json();
   }
@@ -48,6 +66,10 @@ export default async function Home() {
   const currencyRates = await getCurrencyRates();
   const cryptoRates = await getCryptoRates();
   const metalRates = await getMetalRates();
+
+  if (!currencyRates || !cryptoRates || !metalRates) {
+    return <>Unkown error</>;
+  }
 
   const data: DataType = {
     currencyRates,
