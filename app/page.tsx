@@ -13,7 +13,7 @@ import HeroSection from "@/components/hero";
 import Conversions from "@/components/conversions";
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV) {
     return filterConversionRates(currency as CurrencyType);
   } else {
     const data = await fetch(
@@ -32,7 +32,7 @@ const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
 };
 
 const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV) {
     return crypto;
   } else {
     const top50 =
@@ -52,7 +52,7 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
 };
 
 const getMetalRates = async (): Promise<MetalType | undefined> => {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV) {
     return metals;
   } else {
     const data = await fetch(

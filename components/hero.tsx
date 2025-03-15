@@ -1,12 +1,6 @@
-import type React from "react";
-
-import { useRouter } from "next/router";
-
 import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
-  const router = useRouter;
-
   return (
     <>
       {/* Hero Section */}

@@ -5,7 +5,6 @@ import { ArrowDown } from "lucide-react";
 import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
-import { Drawer } from "@/components/ui/drawer";
 import { AssetType, DataType } from "@/lib/types";
 import { formatNumber, getCurrencySymbol, parseNumber } from "@/lib/utils";
 
@@ -16,7 +15,6 @@ export type CurrencyConverterProps = {
 export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   const [topAmount, setTopAmount] = useState("1000");
   const [bottomAmount, setBottomAmount] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [imageLink, setImageLink] = useState("");
   const [selectedCurrencyType, setSelectedCurrencyType] =
@@ -83,17 +81,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
     <div className="w-full max-w-md mx-auto mt-12 mb-12">
       <Card className="bg-gray-100 shadow-sm p-4 rounded-xl">
         <div className="flex items-center gap-2 mb-2">
-          <div
-            className="flex items-center gap-2"
-            role="button"
-            tabIndex={0}
-            onClick={() => setIsOpen(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                setIsOpen(true);
-              }
-            }}
-          >
+          <div className="flex items-center gap-2" role="button" tabIndex={0}>
             <div className="w-6 h-6 rounded-full overflow-hidden">
               <img
                 alt="Icelandic flag"
@@ -117,24 +105,14 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
       </Card>
 
       <div className="flex justify-center">
-        <div className=" rounded-full p-2">
+        <div className="rounded-full p-2">
           <ArrowDown className="text-blue-500" />
         </div>
       </div>
 
       <Card className="bg-gray-100 shadow-sm p-4 rounded-xl border">
         <div className="flex items-center gap-2 mb-2">
-          <div
-            className="flex items-center gap-2"
-            role="button"
-            tabIndex={0}
-            onClick={() => setIsOpen(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                setIsOpen(true);
-              }
-            }}
-          >
+          <div className="flex items-center gap-2" role="button" tabIndex={0}>
             <div className="w-6 h-6 rounded-full overflow-hidden">
               {imageLink && (
                 <Image
@@ -162,7 +140,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
           </div>
         </div>
       </Card>
-      <Drawer
+      {/* <Drawer
         data={data}
         isOpen={isOpen}
         selectedCurrency={selectedCurrency}
@@ -173,7 +151,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
           setIsOpen(false);
         }}
         onSelectCurrencyType={(type) => setSelectedCurrencyType(type)}
-      />
+      /> */}
     </div>
   );
 }

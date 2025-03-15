@@ -129,10 +129,10 @@ export const fetchCurrencyImg = (
   currencyCode: string,
   currencyType: AssetType,
 ): string => {
-  if (currencyType === "currency") {
+  if (currencyType === "Currency") {
     return `https://flagcdn.com/${getCountryCodeFromCurrencyCode(currencyCode)}.svg`;
   }
-  if (currencyType === "metal") {
+  if (currencyType === "Metal") {
     return `https://metals-api.com/images/metal/${currencyCode}.png`;
   } else {
     return "";
