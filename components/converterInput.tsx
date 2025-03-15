@@ -1,22 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
 import { Drawer } from "@/components/ui/drawer";
 import { AssetType, DataType } from "@/lib/types";
+import { formatNumber, getCurrencySymbol, parseNumber } from "@/lib/utils";
 
-type CurrencyConverterProps = {
+export type CurrencyConverterProps = {
   data: DataType;
-};
-
-const formatNumber = (value: number) => {
-  return new Intl.NumberFormat("de-DE").format(value);
-};
-
-const parseNumber = (value: string) => {
-  return parseFloat(value.replace(/\./g, "").replace(/,/g, "."));
 };
 
 export default function CurrencyConverter({ data }: CurrencyConverterProps) {
@@ -24,12 +18,13 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   const [bottomAmount, setBottomAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [imageLink, setImageLink] = useState("");
   const [selectedCurrencyType, setSelectedCurrencyType] =
-    useState<AssetType>("currency");
+    useState<AssetType>("Currency");
 
   useEffect(() => {
     // calculate bottom amount by using the selected currency from data and top amount
-    if (selectedCurrencyType === "currency") {
+    if (selectedCurrencyType === "Currency") {
       setBottomAmount(
         (
           parseNumber(topAmount) *
@@ -37,13 +32,13 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
         ).toFixed(2),
       );
     }
-    if (selectedCurrencyType === "crypto") {
+    if (selectedCurrencyType === "Crypto") {
       const usdAmount =
         parseNumber(topAmount) / data.cryptoRates[selectedCurrency].usd;
 
       setBottomAmount(usdAmount.toFixed(2));
     }
-    if (selectedCurrencyType === "metal") {
+    if (selectedCurrencyType === "Metal") {
       setBottomAmount(
         (
           parseNumber(topAmount) / data.metalRates.metals[selectedCurrency]
@@ -70,12 +65,23 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
     }
   };
 
-  console.log("selected currency", selectedCurrency);
-  console.log("selected currency type", selectedCurrencyType);
+  // useEffect(() => {
+  //   if (selectedCurrencyType === "crypto") {
+  //     fetch(
+  //       `https://api.coingecko.com/api/v3/coins/${selectedCurrency}?tickers=false&market_data=false&community_data=false&developer_data=false&localization=false`,
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setImageLink(data.image.small as string);
+  //       });
+  //   } else {
+  //     setImageLink(fetchCurrencyImg(selectedCurrency, selectedCurrencyType));
+  //   }
+  // }, [selectedCurrency]);
 
   return (
-    <div className="max-w-md mx-auto space-y-4 p-4">
-      <Card className="bg-gray-100 shadow-sm p-4 rounded-xl border">
+    <div className="w-full max-w-md mx-auto mt-12 mb-12">
+      <Card className="bg-gray-100 shadow-sm p-4 rounded-xl">
         <div className="flex items-center gap-2 mb-2">
           <div
             className="flex items-center gap-2"
@@ -96,7 +102,6 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
               />
             </div>
             <span className="text-lg text-black">ISK</span>
-            <ChevronDown className="text-black" />
           </div>
           <div className="ml-auto">
             <input
@@ -112,7 +117,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
       </Card>
 
       <div className="flex justify-center">
-        <div className="bg-black rounded-full p-2">
+        <div className=" rounded-full p-2">
           <ArrowDown className="text-blue-500" />
         </div>
       </div>
@@ -131,14 +136,17 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
             }}
           >
             <div className="w-6 h-6 rounded-full overflow-hidden">
-              <img
-                alt="US flag"
-                className="w-full h-full object-cover"
-                src="https://flagcdn.com/us.svg"
-              />
+              {imageLink && (
+                <Image
+                  alt="flag"
+                  className="w-full h-full object-cover"
+                  height={40}
+                  src={imageLink}
+                  width={40}
+                />
+              )}
             </div>
-            <span className="text-lg text-black">USD</span>
-            <ChevronDown className="text-black" />
+            <span className="text-lg text-black">{selectedCurrency}</span>
           </div>
           <div className="ml-auto">
             <input
@@ -148,7 +156,9 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
               value={bottomAmount}
               onChange={handleBottomAmountChange}
             />
-            <span className="text-black ml-2">$</span>
+            <span className="text-black ml-2">
+              {getCurrencySymbol(selectedCurrency)}
+            </span>
           </div>
         </div>
       </Card>

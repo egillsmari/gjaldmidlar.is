@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { AssetType } from "@/lib/types";
 
@@ -112,7 +111,6 @@ export function Drawer({
   const [assetTypeFilter, setAssetTypeFilter] = React.useState<
     AssetType | "all"
   >("all");
-  const [priceRange, setPriceRange] = React.useState([0, 100000]);
 
   const allAssets: Asset[] = React.useMemo(() => {
     const currencies = Object.entries(data.currencyRates.conversion_rates).map(
@@ -141,18 +139,14 @@ export function Drawer({
     return [...currencies, ...cryptos, ...metals];
   }, [data]);
 
-  const maxPrice = Math.max(...allAssets.map((asset) => asset.value));
-
   const filteredAssets = React.useMemo(() => {
     return allAssets.filter(
       (asset) =>
         (assetTypeFilter === "all" || asset.type === assetTypeFilter) &&
         (asset.code.toLowerCase().includes(search.toLowerCase()) ||
-          asset.name.toLowerCase().includes(search.toLowerCase())) &&
-        asset.value >= priceRange[0] &&
-        asset.value <= priceRange[1],
+          asset.name.toLowerCase().includes(search.toLowerCase())),
     );
-  }, [allAssets, search, assetTypeFilter, priceRange]);
+  }, [allAssets, search, assetTypeFilter]);
 
   const renderAssetItem = (asset: Asset) => {
     return (
@@ -168,7 +162,7 @@ export function Drawer({
           <img
             alt=""
             className="w-8 h-8 rounded-full object-cover"
-            src={`https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/icon/${asset.code.toLowerCase()}.png`}
+            src={`https://flagcdn.com/${asset.code.toLowerCase()}.svg`}
             onError={(e) => {
               e.currentTarget.src = `https://ui-avatars.com/api/?name=${asset.code}&background=random`;
             }}
@@ -241,22 +235,6 @@ export function Drawer({
                   <SelectItem value="metal">Metal</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-zinc-400">
-                  <span>Price Range</span>
-                  <span>
-                    {priceRange[0].toFixed(2)} - {priceRange[1].toFixed(2)}
-                  </span>
-                </div>
-                <Slider
-                  className="w-full"
-                  max={maxPrice}
-                  min={0}
-                  step={0.01}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                />
-              </div>
             </div>
           </SheetHeader>
           <div className="flex-1 overflow-auto divide-y divide-zinc-800">

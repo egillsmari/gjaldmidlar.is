@@ -174,14 +174,113 @@ export const currency = {
 };
 
 export const crypto = {
+  algorand: {
+    usd: 0.370156,
+  },
+  arweave: {
+    usd: 15.56,
+  },
+  "axie-infinity": {
+    usd: 5.34,
+  },
   bitcoin: {
-    usd: 95862,
+    usd: 102201,
+  },
+  "bitcoin-cash": {
+    usd: 422.8,
+  },
+  cardano: {
+    usd: 0.93388,
+  },
+  celo: {
+    usd: 0.544949,
+  },
+  chainlink: {
+    usd: 24.77,
+  },
+  cosmos: {
+    usd: 6.24,
+  },
+  "curve-dao-token": {
+    usd: 0.750831,
+  },
+  dai: {
+    usd: 0.99971,
+  },
+  dogecoin: {
+    usd: 0.324942,
   },
   ethereum: {
-    usd: 2995,
+    usd: 3265.15,
   },
-  "0chain": {
-    usd: 5402,
+  "ethereum-classic": {
+    usd: 26.33,
+  },
+  flow: {
+    usd: 0.644831,
+  },
+  "ftx-token": {
+    usd: 2.15,
+  },
+  helium: {
+    usd: 4.09,
+  },
+  iota: {
+    usd: 0.300253,
+  },
+  "leo-token": {
+    usd: 9.77,
+  },
+  "magic-internet-money": {
+    usd: 0.999994,
+  },
+  monero: {
+    usd: 238.09,
+  },
+  osmosis: {
+    usd: 0.398749,
+  },
+  polkadot: {
+    usd: 6.35,
+  },
+  quant: {
+    usd: 2.23e-5,
+  },
+  "shiba-inu": {
+    usd: 1.87e-5,
+  },
+  solana: {
+    usd: 228.97,
+  },
+  stellar: {
+    usd: 0.409093,
+  },
+  terrausd: {
+    usd: 0.01492356,
+  },
+  tether: {
+    usd: 0.999749,
+  },
+  tezos: {
+    usd: 1.084,
+  },
+  "theta-fuel": {
+    usd: 0.059595,
+  },
+  tron: {
+    usd: 0.254725,
+  },
+  uniswap: {
+    usd: 11.42,
+  },
+  "usd-coin": {
+    usd: 1.0,
+  },
+  vechain: {
+    usd: 0.04724705,
+  },
+  "wrapped-bitcoin": {
+    usd: 102110,
   },
 };
 

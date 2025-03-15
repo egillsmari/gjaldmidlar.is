@@ -43,4 +43,4 @@ export type DataType = {
   metalRates: MetalType;
 };
 
-export type AssetType = "currency" | "crypto" | "metal" | "all";
+export type AssetType = "Currency" | "Crypto" | "Metal" | "All";

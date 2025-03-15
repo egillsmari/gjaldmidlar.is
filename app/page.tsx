@@ -1,4 +1,5 @@
-import { color } from "@/components/primitives";
+import Link from "next/link";
+
 import CurrencyConverter from "@/components/converterInput";
 import { currency, crypto, metals } from "@/lib/data";
 import {
@@ -7,10 +8,13 @@ import {
   DataType,
   MetalType,
 } from "@/lib/types";
+import { filterConversionRates } from "@/lib/utils";
+import HeroSection from "@/components/hero";
+import Conversions from "@/components/conversions";
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
   if (process.env.NODE_ENV === "development") {
-    return currency;
+    return filterConversionRates(currency as CurrencyType);
   } else {
     const data = await fetch(
       `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_RATE_API}/latest/ISK`,
@@ -21,8 +25,9 @@ const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
 
       return undefined;
     }
+    const res = await data.json();
 
-    return await data.json();
+    return filterConversionRates(res as CurrencyType);
   }
 };
 
@@ -30,8 +35,10 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
   if (process.env.NODE_ENV === "development") {
     return crypto;
   } else {
+    const top50 =
+      "bitcoin,ethereum,xrp,tether,solana,binance-coin,usd-coin,cardano,terra,polkadot,dogecoin,avalanche,shiba-inu,polygon,crypto-com-coin,wrapped-bitcoin,dai,cosmos,near-protocol,chainlink,tron,uniswap,algorand,bitcoin-cash,stellar,vechain,axie-infinity,terrausd,hedera,elrond,theta-fuel,monero,tezos,helium,ftx-token,flow,ethereum-classic,theta,klaytn,magic-internet-money,leo-token,celo,osmosis,bitcoin-sv,iota,curve-dao-token,arweave,quant,neo";
     const data = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=0chain&vs_currencies=eur`,
+      `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&api_key=CG-wzboML1XEzUiakgrQrKZbfrJ&ids=${top50}`,
     );
 
     if (!data.ok) {
@@ -70,7 +77,6 @@ export default async function Home() {
   if (!currencyRates || !cryptoRates || !metalRates) {
     return <>Unkown error</>;
   }
-
   const data: DataType = {
     currencyRates,
     cryptoRates,
@@ -78,18 +84,21 @@ export default async function Home() {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="w-full max-w-full md:max-w-[800px] text-center justify-center">
-        <h1>
-          <span className={color({ color: "blue" })}>ISK </span>
-          <span className={color()}> í </span>
-          <span className={color({ color: "red" })}>USD</span>
-        </h1>
-        <br />
-        <br />
-
-        <CurrencyConverter data={data} />
-      </div>
-    </section>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+      <HeroSection />
+      <CurrencyConverter data={data} />
+      <Conversions data={data} />
+      <footer className="w-full flex items-center justify-center py-3">
+        <Link
+          className="flex items-center gap-1 text-current"
+          href="https://egillsmari.dev"
+          target="_blank"
+          title="Egill Smári - Vefsíða"
+        >
+          <span className="text-default-600">Höfundur </span>
+          <p className="text-primary">Egill</p>
+        </Link>
+      </footer>
+    </div>
   );
 }
