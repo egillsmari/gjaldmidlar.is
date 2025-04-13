@@ -10,7 +10,6 @@ import {
 } from "@/lib/types";
 import { filterConversionRates } from "@/lib/utils";
 import HeroSection from "@/components/hero";
-import Conversions from "@/components/conversions";
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
   if (process.env.NODE_ENV) {
@@ -53,6 +52,15 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
 
 const getMetalRates = async (): Promise<MetalType | undefined> => {
   if (process.env.NODE_ENV) {
+    // Also filter the test data in case it contains underscores
+    if (metals && metals.metals) {
+      const filteredMetals = Object.fromEntries(
+        Object.entries(metals.metals).filter(([key]) => !key.includes("_")),
+      );
+
+      return { ...metals, metals: filteredMetals };
+    }
+
     return metals;
   } else {
     const data = await fetch(
@@ -65,7 +73,20 @@ const getMetalRates = async (): Promise<MetalType | undefined> => {
       return undefined;
     }
 
-    return await data.json();
+    const response = await data.json();
+
+    // More thorough filtering of metals with underscores
+    if (response && response.metals) {
+      // Log before filtering to debug
+
+      const filteredMetals = Object.fromEntries(
+        Object.entries(response.metals).filter(([key]) => !key.includes("_")),
+      );
+
+      response.metals = filteredMetals;
+    }
+
+    return response;
   }
 };
 
@@ -80,14 +101,13 @@ export default async function Home() {
   const data: DataType = {
     currencyRates,
     cryptoRates,
-    metalRates,
+    metalRates: metalRates,
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
       <HeroSection />
       <CurrencyConverter data={data} />
-      <Conversions data={data} />
       <footer className="w-full flex items-center justify-center py-3">
         <Link
           className="flex items-center gap-1 text-current"

@@ -156,3 +156,38 @@ export const formatNumber = (value: number) => {
 export const parseNumber = (value: string) => {
   return parseFloat(value.replace(/\./g, "").replace(/,/g, "."));
 };
+
+export const getMetalColor = (metalCode: string): string => {
+  // Normalize the metal code to lowercase for consistent matching
+  const normalizedCode = metalCode.toLowerCase();
+
+  // Map of metal codes to their representative colors
+  const metalColors: Record<string, string> = {
+    // Base metals
+    gold: "#FFD700",
+    silver: "#C0C0C0",
+    platinum: "#E5E4E2",
+    palladium: "#CED0DD",
+    copper: "#B87333",
+    aluminum: "#D3D3D3",
+    lead: "#2C3539",
+    nickel: "#727472",
+    zinc: "#A9A9A9",
+
+    // Handle variant codes by checking if they contain the metal name
+    xau: "#FFD700", // Gold
+    xag: "#C0C0C0", // Silver
+    xpt: "#E5E4E2", // Platinum
+    xpd: "#CED0DD", // Palladium
+  };
+
+  // Check if the code is a variant (contains the metal name)
+  for (const [metal, color] of Object.entries(metalColors)) {
+    if (normalizedCode.includes(metal)) {
+      return color;
+    }
+  }
+
+  // Default metal color if specific match not found
+  return "#B0B0B0"; // Generic metallic gray
+};

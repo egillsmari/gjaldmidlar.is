@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AssetType } from "@/lib/types";
+import { getMetalColor } from "@/lib/utils";
 
 export type CurrencyType = {
   result: string;
@@ -85,6 +86,16 @@ const assetNames: Record<string, string> = {
   XAG: "Silver",
   XPT: "Platinum",
   XPD: "Palladium",
+  // Add common metals from data
+  gold: "Gold",
+  silver: "Silver",
+  platinum: "Platinum",
+  palladium: "Palladium",
+  copper: "Copper",
+  aluminum: "Aluminum",
+  lead: "Lead",
+  nickel: "Nickel",
+  zinc: "Zinc",
 };
 
 const sortOptions = [
@@ -96,7 +107,63 @@ const sortOptions = [
 
 const assetTypes: AssetType[] = ["All", "Currency", "Crypto", "Metal"];
 
-export default function Conversions({ data }: CurrencyConverterProps) {
+interface ConversionsProps extends CurrencyConverterProps {
+  onSelectCurrency?: (code: string, type: AssetType) => void;
+  selectedCurrency?: string;
+  selectedCurrencyType?: AssetType;
+}
+
+const getMetalName = (name: string) => {
+  return name
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+    .join(" ");
+};
+
+const getCryptoName = (name: string) => {
+  return name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+    .join(" ");
+};
+
+const getAssetDisplayName = (asset: Asset): string => {
+  if (asset.type === "Crypto") {
+    // For crypto, transform hyphenated names to title case
+    return asset.name !== asset.code
+      ? asset.name
+      : asset.code
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+          .join(" ");
+  } else if (asset.type === "Metal") {
+    // For metals, handle prefixed names (lbma_, mcx_, etc.)
+    const baseName = asset.code.split("_").pop() || asset.code;
+
+    return baseName.charAt(0).toUpperCase() + baseName.substring(1);
+  } else {
+    // For currencies, use the provided name or code
+    return asset.name;
+  }
+};
+
+const getAssetCode = (asset: Asset): string => {
+  if (asset.type === "Crypto") {
+    return asset.code.toUpperCase();
+  } else if (asset.type === "Metal") {
+    // Show original code for metals
+    return asset.code;
+  } else {
+    return asset.code;
+  }
+};
+
+export default function Conversions({
+  data,
+  onSelectCurrency,
+  selectedCurrency,
+  selectedCurrencyType,
+}: ConversionsProps) {
   const [assetTypeFilter, setAssetTypeFilter] = useState<AssetType>("All");
 
   const [sortBy, setSortBy] = useState("popularity");
@@ -111,16 +178,18 @@ export default function Conversions({ data }: CurrencyConverterProps) {
         value,
       }),
     ) satisfies Asset[];
+
     const cryptos = Object.entries(data.cryptoRates).map(([code, { usd }]) => ({
       code,
-      name: assetNames[code] || code,
+      name: assetNames[code] || getCryptoName(code),
       type: "Crypto",
       value: usd,
     })) satisfies Asset[];
+
     const metals = Object.entries(data.metalRates.metals).map(
       ([code, value]) => ({
         code,
-        name: assetNames[code] || code,
+        name: assetNames[code] || getMetalName(code),
         type: "Metal",
         value,
       }),
@@ -129,15 +198,7 @@ export default function Conversions({ data }: CurrencyConverterProps) {
     return [...currencies, ...cryptos, ...metals];
   }, [data]);
 
-  // const [availableConversions, setAvailableConversions] = useState([
-  //   ...data.cryptoRates,
-  //   ...data.currencyRates,
-  //   ...data.metalRates,
-  // ]);
-
   const filteredAssets = useMemo(() => {
-    console.log("filtering assets");
-
     return allAssets.filter(
       (asset) =>
         (assetTypeFilter === "All" || asset.type === assetTypeFilter) &&
@@ -146,32 +207,27 @@ export default function Conversions({ data }: CurrencyConverterProps) {
     );
   }, [allAssets, searchTerm, assetTypeFilter]);
 
-  // TODO: enable this sorting
-  // useEffect(() => {
-  //   const sorted = [...mockConversions];
+  const sortedAssets = useMemo(() => {
+    const sorted = [...filteredAssets];
 
-  //   switch (sortBy) {
-  //     case "priceHigh":
-  //       sorted.sort((a, b) => b.price - a.price);
-  //       break;
-  //     case "priceLow":
-  //       sorted.sort((a, b) => a.price - b.price);
-  //       break;
-  //     case "popularity":
-  //       sorted.sort((a, b) => b.popularity - a.popularity);
-  //       break;
-  //     case "name":
-  //       sorted.sort((a, b) => a.name.localeCompare(b.name));
-  //       break;
-  //   }
-  //   setAvailableConversions(
-  //     sorted.filter(
-  //       (conv) =>
-  //         conv.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //         conv.code.toLowerCase().includes(searchTerm.toLowerCase()),
-  //     ),
-  //   );
-  // }, [sortBy, searchTerm]);
+    switch (sortBy) {
+      case "priceHigh":
+        return sorted.sort((a, b) => b.value - a.value);
+      case "priceLow":
+        return sorted.sort((a, b) => a.value - b.value);
+      case "name":
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "popularity":
+      default:
+        return sorted;
+    }
+  }, [filteredAssets, sortBy]);
+
+  const handleAssetSelect = (asset: Asset) => {
+    if (onSelectCurrency) {
+      onSelectCurrency(asset.code, asset.type);
+    }
+  };
 
   return (
     <main className="flex-grow container mx-auto px-4 py-8">
@@ -219,22 +275,42 @@ export default function Conversions({ data }: CurrencyConverterProps) {
 
         {/* Currency Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredAssets.map((conv) => (
+          {sortedAssets.map((asset) => (
             <Card
-              key={conv.name}
-              className="p-4 flex items-center justify-between"
+              key={`${asset.type}-${asset.code}`}
+              className={`p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors ${
+                selectedCurrency === asset.code &&
+                selectedCurrencyType === asset.type
+                  ? "border-blue-500 ring-2 ring-blue-200"
+                  : ""
+              }`}
+              onClick={() => handleAssetSelect(asset)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">
-                  {conv.code.substring(0, 2)}
+                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-gray-600 overflow-hidden">
+                  {asset.type === "Metal" ? (
+                    <div
+                      className="w-full h-full"
+                      style={{ backgroundColor: getMetalColor(asset.code) }}
+                      title={asset.code}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      {asset.code.substring(0, 2)}
+                    </div>
+                  )}
                 </div>
                 <div>
-                  <div className="font-semibold">{conv.name}</div>
-                  <div className="text-sm text-gray-500">{conv.code}</div>
+                  <div className="font-semibold">
+                    {getAssetDisplayName(asset)}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {getAssetCode(asset)}
+                  </div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-semibold">${conv.value.toFixed(2)}</div>
+                <div className="font-semibold">${asset.value.toFixed(2)}</div>
               </div>
             </Card>
           ))}
