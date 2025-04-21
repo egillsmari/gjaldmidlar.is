@@ -12,7 +12,7 @@ import { filterConversionRates } from "@/lib/utils";
 import HeroSection from "@/components/hero";
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
-  if (process.env.NODE_ENV) {
+  if (process.env.NODE_ENV === "development") {
     return filterConversionRates(currency as CurrencyType);
   } else {
     const data = await fetch(
@@ -31,7 +31,7 @@ const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
 };
 
 const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
-  if (process.env.NODE_ENV) {
+  if (process.env.NODE_ENV === "development") {
     return crypto;
   } else {
     const top50 =
@@ -51,7 +51,7 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
 };
 
 const getMetalRates = async (): Promise<MetalType | undefined> => {
-  if (process.env.NODE_ENV) {
+  if (process.env.NODE_ENV === "development") {
     // Also filter the test data in case it contains underscores
     if (metals && metals.metals) {
       const filteredMetals = Object.fromEntries(

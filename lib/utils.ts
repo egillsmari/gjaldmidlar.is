@@ -7,7 +7,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getCurrencySymbol = (code: string): string => {
+export const getCurrencySymbol = (
+  code: string,
+  selectedCurrencyType: string,
+): string => {
+  if (selectedCurrencyType === "Metal") {
+    return "gr.";
+  }
   const currencySymbols: Record<string, string> = {
     USD: "$", // US Dollar
     EUR: "€", // Euro
@@ -41,7 +47,24 @@ export const getCurrencySymbol = (code: string): string => {
     stellar: "✦", // Stellar
   };
 
-  return currencySymbols[code] || code;
+  const final = currencySymbols[code] || code;
+
+  if (final.includes("-")) {
+    let splitted = "";
+
+    final.split("-").forEach((part) => {
+      splitted += part.charAt(0).toUpperCase();
+    });
+
+    return splitted;
+  }
+
+  // if the final is longer then 10 characters then cut it to 10 characters
+  if (final.length > 8) {
+    return final.slice(0, 8) + "...";
+  }
+
+  return final;
 };
 
 export const getCountryCodeFromCurrencyCode = (

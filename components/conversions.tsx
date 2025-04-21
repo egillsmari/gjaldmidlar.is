@@ -6,6 +6,7 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 
 import { CurrencyConverterProps } from "./converterInput";
+import { AssetImage } from "./asset-image";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AssetType } from "@/lib/types";
-import { getMetalColor } from "@/lib/utils";
 
 export type CurrencyType = {
   result: string;
@@ -162,7 +162,6 @@ export default function Conversions({
   data,
   onSelectCurrency,
   selectedCurrency,
-  selectedCurrencyType,
 }: ConversionsProps) {
   const [assetTypeFilter, setAssetTypeFilter] = useState<AssetType>("All");
 
@@ -278,28 +277,20 @@ export default function Conversions({
           {sortedAssets.map((asset) => (
             <Card
               key={`${asset.type}-${asset.code}`}
-              className={`p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors ${
-                selectedCurrency === asset.code &&
-                selectedCurrencyType === asset.type
-                  ? "border-blue-500 ring-2 ring-blue-200"
-                  : ""
+              className={`p-4 flex items-center justify-between cursor-pointer transition-all duration-200 ${
+                selectedCurrency === asset.code
+                  ? "border-primary bg-primary/5 shadow-md scale-[1.02] transform"
+                  : "hover:bg-gray-50 border-border"
               }`}
               onClick={() => handleAssetSelect(asset)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-gray-600 overflow-hidden">
-                  {asset.type === "Metal" ? (
-                    <div
-                      className="w-full h-full"
-                      style={{ backgroundColor: getMetalColor(asset.code) }}
-                      title={asset.code}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      {asset.code.substring(0, 2)}
-                    </div>
-                  )}
-                </div>
+                <AssetImage
+                  className="flex-shrink-0"
+                  code={asset.code}
+                  size={40}
+                  type={asset.type}
+                />
                 <div>
                   <div className="font-semibold">
                     {getAssetDisplayName(asset)}
@@ -308,9 +299,6 @@ export default function Conversions({
                     {getAssetCode(asset)}
                   </div>
                 </div>
-              </div>
-              <div className="text-right">
-                <div className="font-semibold">${asset.value.toFixed(2)}</div>
               </div>
             </Card>
           ))}

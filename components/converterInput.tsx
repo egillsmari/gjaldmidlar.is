@@ -2,19 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { ArrowDown } from "lucide-react";
-import Image from "next/image";
 
+import { AssetImage } from "./asset-image";
 import Conversions from "./conversions";
 
 import { Card } from "@/components/ui/card";
 import { AssetType, DataType } from "@/lib/types";
-import {
-  fetchCurrencyImg,
-  formatNumber,
-  getCurrencySymbol,
-  getMetalColor,
-  parseNumber,
-} from "@/lib/utils";
+import { getCurrencySymbol, parseNumber, formatNumber } from "@/lib/utils";
 
 export type CurrencyConverterProps = {
   data: DataType;
@@ -24,8 +18,6 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   const [topAmount, setTopAmount] = useState("1000");
   const [bottomAmount, setBottomAmount] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  const [imageLink, setImageLink] = useState("");
-  const [metalColor, setMetalColor] = useState("");
   const [selectedCurrencyType, setSelectedCurrencyType] =
     useState<AssetType>("Currency");
 
@@ -43,16 +35,18 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
         const usdAmount =
           parseNumber(topAmount) / data.cryptoRates[selectedCurrency]?.usd;
 
-        calculatedAmount = usdAmount.toFixed(2);
+        if (usdAmount.toString().length > 6) {
+          calculatedAmount = usdAmount.toFixed(4);
+        } else {
+          calculatedAmount = usdAmount.toFixed(8);
+        }
       } else if (selectedCurrencyType === "Metal") {
         calculatedAmount = (
           parseNumber(topAmount) / data.metalRates.metals[selectedCurrency]
-        ).toFixed(2);
+        ).toFixed(4);
       }
-
       setBottomAmount(calculatedAmount);
     } catch (error) {
-      console.error("Error calculating conversion:", error);
       setBottomAmount("0");
     }
   }, [topAmount, selectedCurrency, selectedCurrencyType, data]);
@@ -78,44 +72,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   const handleCurrencySelect = (code: string, type: AssetType) => {
     setSelectedCurrency(code);
     setSelectedCurrencyType(type);
-
-    // Here you could also fetch the image if needed
-    fetchCurrencyImage(code, type);
   };
-
-  // Function to fetch currency images when needed
-  const fetchCurrencyImage = (code: string, type: AssetType) => {
-    // Reset both image and color before setting new ones
-    setImageLink("");
-    setMetalColor("");
-
-    if (type === "Metal") {
-      // For metals, use colors instead of images
-      const color = getMetalColor(code);
-
-      setMetalColor(color);
-    } else if (type === "Crypto") {
-      fetch(
-        `https://api.coingecko.com/api/v3/coins/${code.toLowerCase()}?tickers=false&market_data=false&community_data=false&developer_data=false&localization=false`,
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setImageLink(data.image.small as string);
-        })
-        .catch((err) => {
-          setImageLink("");
-        });
-    } else {
-      const imageUrl = fetchCurrencyImg(code, type);
-
-      setImageLink(imageUrl);
-    }
-  };
-
-  // Call fetchCurrencyImage on initial load
-  useEffect(() => {
-    fetchCurrencyImage(selectedCurrency, selectedCurrencyType);
-  }, []);
 
   return (
     <>
@@ -154,27 +111,11 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
         <Card className="bg-gray-100 shadow-sm p-4 rounded-xl border">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2" role="button" tabIndex={0}>
-              <div className="w-6 h-6 rounded-full overflow-hidden">
-                {selectedCurrencyType === "Metal" && metalColor ? (
-                  <div
-                    className="w-full h-full"
-                    style={{ backgroundColor: metalColor }}
-                    title={`${selectedCurrency} color`}
-                  />
-                ) : imageLink ? (
-                  <Image
-                    alt={`${selectedCurrency} icon`}
-                    className="w-full h-full object-cover"
-                    height={40}
-                    src={imageLink}
-                    width={40}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-300 flex items-center justify-center text-xs">
-                    {selectedCurrency.substring(0, 2)}
-                  </div>
-                )}
-              </div>
+              <AssetImage
+                code={selectedCurrency}
+                size={24}
+                type={selectedCurrencyType}
+              />
               <span className="text-lg text-black">{selectedCurrency}</span>
             </div>
             <div className="ml-auto">
@@ -186,7 +127,7 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
                 onChange={handleBottomAmountChange}
               />
               <span className="text-black ml-2">
-                {getCurrencySymbol(selectedCurrency)}
+                {getCurrencySymbol(selectedCurrency, selectedCurrencyType)}
               </span>
             </div>
           </div>
