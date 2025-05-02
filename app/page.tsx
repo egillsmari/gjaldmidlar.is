@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react";
 
 import CurrencyConverter from "@/components/converterInput";
 import { currency, crypto, metals } from "@/lib/data";
@@ -110,6 +111,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+      <Analytics />
       <HeroSection />
       <CurrencyConverter data={data} />
       <footer className="w-full flex items-center justify-center py-3">
