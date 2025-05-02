@@ -95,6 +95,10 @@ export default async function Home() {
   const cryptoRates = await getCryptoRates();
   const metalRates = await getMetalRates();
 
+  console.log("currencyRates: ", currencyRates);
+  console.log("cryptoRates: ", cryptoRates);
+  console.log("metalRates: ", metalRates);
+
   if (!currencyRates || !cryptoRates || !metalRates) {
     return <>Unkown error</>;
   }
