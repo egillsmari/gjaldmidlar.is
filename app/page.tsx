@@ -38,7 +38,7 @@ const getCryptoRates = async (): Promise<CryptoCurrencyType | undefined> => {
     const top50 =
       "bitcoin,ethereum,xrp,tether,solana,binance-coin,usd-coin,cardano,terra,polkadot,dogecoin,avalanche,shiba-inu,polygon,crypto-com-coin,wrapped-bitcoin,dai,cosmos,near-protocol,chainlink,tron,uniswap,algorand,bitcoin-cash,stellar,vechain,axie-infinity,terrausd,hedera,elrond,theta-fuel,monero,tezos,helium,ftx-token,flow,ethereum-classic,theta,klaytn,magic-internet-money,leo-token,celo,osmosis,bitcoin-sv,iota,curve-dao-token,arweave,quant,neo";
     const data = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&api_key=CG-wzboML1XEzUiakgrQrKZbfrJ&ids=${top50}`,
+      `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&api_key=${process.env.NEXT_PUBLIC_CRYPTO_RATE_API}&ids=${top50}`,
     );
 
     if (!data.ok) {
