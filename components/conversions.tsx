@@ -241,7 +241,7 @@ export default function Conversions({
               variant={assetTypeFilter === category ? "default" : "outline"}
               onClick={() => setAssetTypeFilter(category)}
             >
-              {category}
+              <span>{category}</span>
             </Button>
           ))}
         </div>
