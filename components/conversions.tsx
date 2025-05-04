@@ -231,7 +231,7 @@ export default function Conversions({
   return (
     <main className="flex-grow container mx-auto px-4 py-8">
       <div>
-        <h2 className="text-2xl font-bold mb-4">Til skiptis</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black">Til skiptis</h2>
         {/* Categories */}
         <div className="flex flex-wrap gap-2 mb-6">
           {assetTypes.map((category) => (
