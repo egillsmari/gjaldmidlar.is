@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
@@ -19,8 +21,8 @@ export default function HeroSection() {
                 meira.
               </p>
               <div className="flex justify-center md:justify-start space-x-4">
-                <Button className="bg-white text-blue-600 hover:bg-blue-50">
-                  Leggðu til nýja einningu
+                <Button className="bg-white text-blue-600 hover:bg-blue-50 cursor-pointer ">
+                  <Link href="/tillaga">Leggðu til nýja einningu</Link>
                 </Button>
               </div>
             </div>

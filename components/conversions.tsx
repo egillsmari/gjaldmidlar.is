@@ -99,10 +99,10 @@ const assetNames: Record<string, string> = {
 };
 
 const sortOptions = [
-  { value: "priceHigh", label: "Price: High to Low" },
-  { value: "priceLow", label: "Price: Low to High" },
-  { value: "popularity", label: "Popularity" },
-  { value: "name", label: "Name (A-Z)" },
+  { value: "priceHigh", label: "Verð: Hátt til lágt" },
+  { value: "priceLow", label: "Verð: Lágt til hátt" },
+  { value: "popularity", label: "Vinsælt" },
+  { value: "name", label: "Nafn" },
 ];
 
 const assetTypes: AssetType[] = ["All", "Currency", "Crypto", "Metal"];
@@ -241,7 +241,17 @@ export default function Conversions({
               variant={assetTypeFilter === category ? "default" : "outline"}
               onClick={() => setAssetTypeFilter(category)}
             >
-              <span>{category}</span>
+              <span>
+                {category === "All"
+                  ? "Allt"
+                  : category === "Crypto"
+                    ? "Rafmyntir"
+                    : category === "Currency"
+                      ? "Gjaldmiðlar"
+                      : category === "Metal"
+                        ? "Málmar"
+                        : ""}
+              </span>
             </Button>
           ))}
         </div>
