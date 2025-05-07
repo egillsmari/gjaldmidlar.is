@@ -14,13 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 
-export type InputType = {
+type InputType = {
   name: string;
   email: string;
   message: string;
 };
 
-export const sendEmail = async (input: InputType): Promise<boolean | Error> => {
+const sendEmail = async (input: InputType): Promise<boolean | Error> => {
   const date = new Date();
 
   try {
