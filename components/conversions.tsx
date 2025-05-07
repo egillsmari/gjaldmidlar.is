@@ -229,14 +229,28 @@ export default function Conversions({
   };
 
   return (
-    <main className="flex-grow container mx-auto px-4 py-8">
+    <section
+      itemScope
+      aria-labelledby="available-currencies-heading"
+      className="flex-grow container mx-auto px-4 py-8"
+      itemType="https://schema.org/ItemList"
+    >
+      <meta content="Tiltækir gjaldmiðlar til skiptis" itemProp="name" />
       <div>
-        <h2 className="text-2xl font-bold mb-4 text-black">Til skiptis</h2>
+        <h2
+          className="text-2xl font-bold mb-4 text-black"
+          id="available-currencies-heading"
+          itemProp="headline"
+        >
+          Til skiptis
+        </h2>
         {/* Categories */}
         <div className="flex flex-wrap gap-2 mb-6">
           {assetTypes.map((category) => (
             <Button
               key={category}
+              aria-controls="asset-grid"
+              aria-selected={assetTypeFilter === category}
               className="text-sm"
               variant={assetTypeFilter === category ? "default" : "outline"}
               onClick={() => setAssetTypeFilter(category)}
@@ -259,16 +273,22 @@ export default function Conversions({
         {/* Search and Sort */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="relative flex-grow">
+            <label className="sr-only" htmlFor="asset-search">
+              Leita að gjaldmiðlum
+            </label>
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <Input
               className="pl-10"
               placeholder="Leita"
-              type="text"
+              type="search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <Select value={sortBy} onValueChange={setSortBy}>
+            <label className="sr-only" htmlFor="sort-select">
+              Raða gjaldmiðlum
+            </label>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -292,10 +312,15 @@ export default function Conversions({
                   ? "border-primary bg-primary/5 shadow-md scale-[1.02] transform"
                   : "hover:bg-gray-50 border-border"
               }`}
+              itemProp="itemListElement"
+              itemType="https://schema.org/ListItem"
+              role="gridcell"
+              tabIndex={0}
               onClick={() => handleAssetSelect(asset)}
             >
               <div className="flex items-center gap-3">
                 <AssetImage
+                  alt={`${asset.code} tákn`}
                   className="flex-shrink-0"
                   code={asset.code}
                   size={40}
@@ -314,6 +339,6 @@ export default function Conversions({
           ))}
         </div>
       </div>
-    </main>
+    </section>
   );
 }

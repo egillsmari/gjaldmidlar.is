@@ -131,6 +131,8 @@ export default async function Home() {
           <span className="text-default-600">Höfundur </span>
           <p className="text-primary">Egill</p>
         </Link>
+        <span className="mx-2 text-gray-500 text-sm">|</span>
+        <p className="text-gray-500 text-sm">Gengi gæti verið úrelt</p>
       </footer>
     </div>
   );

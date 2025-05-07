@@ -8,6 +8,7 @@ interface AssetImageProps {
   type: AssetType;
   size?: number;
   className?: string;
+  alt?: string;
 }
 
 export function AssetImage({
@@ -15,6 +16,7 @@ export function AssetImage({
   type,
   size = 24,
   className = "",
+  alt = "Mynd",
 }: AssetImageProps) {
   const { imageUrl, metalColor } = useAssetImage(code, type);
 
@@ -22,6 +24,7 @@ export function AssetImage({
   if (type === "Metal" && metalColor) {
     return (
       <div
+        aria-label={alt}
         className={`rounded-full overflow-hidden ${className}`}
         style={{ width: size, height: size, backgroundColor: metalColor }}
         title={`${code} color`}
@@ -37,7 +40,7 @@ export function AssetImage({
         style={{ width: size, height: size }}
       >
         <Image
-          alt={`${code} icon`}
+          alt={alt}
           className="object-cover w-full h-full"
           height={size}
           src={imageUrl}
