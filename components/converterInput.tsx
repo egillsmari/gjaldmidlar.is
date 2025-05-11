@@ -71,14 +71,13 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
   };
 
   const handleCurrencySelect = (code: string, type: AssetType) => {
-    console.log("Selected currency: ", code, type);
     setSelectedCurrency(code);
     setSelectedCurrencyType(type);
   };
 
   return (
     <>
-      <div className="w-full max-w-md mx-auto mt-12 mb-4">
+      <div className="w-full max-w-md mx-auto mt-12 mb-12">
         <Card className="bg-gray-100 shadow-sm p-4 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center gap-2" role="button" tabIndex={0}>

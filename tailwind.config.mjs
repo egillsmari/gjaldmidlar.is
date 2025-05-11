@@ -20,6 +20,15 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {},
+      animation: {
+        "shimmer-fast": "shimmer 1s",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
     },
   },
   darkMode: ["class", "class"],
