@@ -14,9 +14,68 @@ import { filterConversionRates } from "@/lib/utils";
 import HeroSection from "@/components/hero";
 
 export const metadata: Metadata = {
-  title: "Gjaldmiðlar.is",
+  title: "Gjaldmiðlar.is | Gjaldmiðlareikniviðmót",
   description:
-    "Gjaldmiðlar.is - Vefsíða til að breyta gjaldmiðlum, rafmyntum og málmum",
+    "Gjaldmiðlar.is - Öflug vefsíða til að breyta á milli gjaldmiðla, rafmynta og málma á einfaldan og skjótan hátt.",
+  keywords: [
+    "gjaldmiðlar",
+    "rafmyntir",
+    "málmar",
+    "gengisreiknivél",
+    "currency converter",
+    "cryptocurrency",
+    "metals",
+    "ISK",
+    "bitcoin",
+    "ethereum",
+  ],
+  authors: [{ name: "Egill Smári" }],
+  category: "Finance",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  metadataBase: new URL("https://gjaldmidlar.is"),
+  alternates: {
+    canonical: "https://gjaldmidlar.is",
+  },
+  openGraph: {
+    title: "Gjaldmiðlar.is | Rafræn Gengisreiknivél",
+    description:
+      "Öflug íslensk vefsíða til að umreikna gjaldmiðla, rafmynta og málma á einfaldan hátt.",
+    url: "https://gjaldmidlar.is",
+    siteName: "Gjaldmiðlar.is",
+    locale: "is_IS",
+    type: "website",
+    // images: [
+    //   {
+    //     url: "https://gjaldmidlar.is/og-image.jpg",
+    //     width: 1200,
+    //     height: 630,
+    //     alt: "Gjaldmiðlar.is Logo",
+    //   },
+    // ],
+  },
+  // twitter: {
+  //   card: "summary_large_image",
+  //   title: "Gjaldmiðlar.is | Rafræn Gengisreiknivél",
+  //   description:
+  //     "Öflug íslensk vefsíða til að umreikna gjaldmiðla, rafmynta og málma á einfaldan hátt.",
+  //   images: ["https://gjaldmidlar.is/twitter-image.jpg"],
+  // },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  verification: {
+    google: "bFZ3F4Nx5YHtl-zCK3ZvOVw9oVqNIm7xGYwehxK86O8",
+  },
 };
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
@@ -103,10 +162,6 @@ export default async function Home() {
   const cryptoRates = await getCryptoRates();
   const metalRates = await getMetalRates();
 
-  console.log("currencyRates: ", currencyRates);
-  console.log("cryptoRates: ", cryptoRates);
-  console.log("metalRates: ", metalRates);
-
   if (!currencyRates || !cryptoRates || !metalRates) {
     return <>Unkown error</>;
   }
@@ -125,6 +180,7 @@ export default async function Home() {
         <Link
           className="flex items-center gap-1 text-current"
           href="https://egillsmari.dev"
+          rel="author noopener"
           target="_blank"
           title="Egill Smári - Vefsíða"
         >
