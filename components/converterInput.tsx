@@ -5,6 +5,7 @@ import { ArrowDown } from "lucide-react";
 
 import { AssetImage } from "./asset-image";
 import Conversions from "./conversions";
+import { Button } from "./ui/button";
 
 import { Card } from "@/components/ui/card";
 import { AssetType, DataType } from "@/lib/types";
@@ -132,6 +133,35 @@ export default function CurrencyConverter({ data }: CurrencyConverterProps) {
             </div>
           </div>
         </Card>
+      </div>
+      <div className="flex justify-center gap-4 mt-4 mb-4">
+        <Button
+          className="text-sm w-36"
+          variant="action"
+          onClick={() => {
+            handleCurrencySelect("bitcoin", "Crypto");
+          }}
+        >
+          Bitcoin í ISK
+        </Button>
+        <Button
+          className="text-sm w-36"
+          variant="action"
+          onClick={() => {
+            handleCurrencySelect("gold", "Metal");
+          }}
+        >
+          Gull í ISK
+        </Button>
+        <Button
+          className="text-sm w-36"
+          variant="action"
+          onClick={() => {
+            handleCurrencySelect("EUR", "Currency");
+          }}
+        >
+          EUR í ISK
+        </Button>
       </div>
       <Conversions
         data={data}

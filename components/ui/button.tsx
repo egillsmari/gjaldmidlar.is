@@ -20,6 +20,8 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
+        action:
+          "bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full transition-all duration-300 ease-in-out hover:shadow-md hover:scale-[1.02] relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent before:translate-x-[-100%] hover:before:animate-shimmer-fast",
       },
       size: {
         default: "h-10 px-4 py-2",
