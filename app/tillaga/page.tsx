@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
 
 export type InputType = {
   name: string;
@@ -20,7 +19,7 @@ export type InputType = {
   message: string;
 };
 
-export const sendEmail = async (input: InputType): Promise<boolean | Error> => {
+const sendEmail = async (input: InputType): Promise<boolean | Error> => {
   const date = new Date();
 
   try {
@@ -88,13 +87,8 @@ export default function SuggestCurrency() {
 
       // Show success screen
       setIsSubmitted(true);
-    } catch (error) {
-      toast({
-        title: "Eitthvað fór úrskeiðis",
-        description:
-          "Ekki tókst að senda tillöguna þína. Vinsamlegast reyndu aftur.",
-        variant: "destructive",
-      });
+    } catch {
+      window.alert("Eitthvað fór úrskeiðis. Vinsamlegast reyndu aftur síðar.");
     } finally {
       setIsSubmitting(false);
     }
