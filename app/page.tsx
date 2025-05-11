@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
+import { Metadata } from "next";
 
 import CurrencyConverter from "@/components/converterInput";
 import { currency, crypto, metals } from "@/lib/data";
@@ -11,6 +12,12 @@ import {
 } from "@/lib/types";
 import { filterConversionRates } from "@/lib/utils";
 import HeroSection from "@/components/hero";
+
+export const metadata: Metadata = {
+  title: "Gjaldmiðlar.is",
+  description:
+    "Gjaldmiðlar.is - Vefsíða til að breyta gjaldmiðlum, rafmyntum og málmum",
+};
 
 const getCurrencyRates = async (): Promise<CurrencyType | undefined> => {
   if (process.env.NODE_ENV === "development") {

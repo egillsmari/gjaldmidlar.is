@@ -24,7 +24,7 @@ const processQueue = () => {
   setTimeout(() => {
     isProcessingQueue = false;
     processQueue();
-  }, 1000); // 1.5 seconds between calls
+  }, 500); // .5 seconds between calls
 };
 
 export function useAssetImage(code: string, type: AssetType) {
